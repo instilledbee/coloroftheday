@@ -1,0 +1,207 @@
+<!DOCTYPE html">
+<html>
+	<head>
+		<title>Color of the Day</title>
+		<style type="text/css">
+		<!--
+			body {
+				width: 100%;
+				overflow-x: hidden;
+				font-family: "Helvetica", "Arial", sans-serif;
+			}
+			
+			h1, h2, h3, h4 {
+				margin: 0;
+				line-height: 1.25em;
+			}
+			
+			h1.main-head {
+				font-size: 28pt;
+			}
+			
+			h2.main-content {
+				font-size: 40pt;
+			}
+			
+			h2#the-color-code {
+				text-transform: uppercase;
+			}
+			
+			h1 {
+				font-size: 18pt;
+			}
+			
+			h2 {
+				font-size: 14pt;
+			}
+			
+			.wrapper {
+				width: 95%;
+				margin: 10% auto;
+				text-align: center;
+			}
+			
+			#the-color {
+				min-height: 120px;
+				padding: 40px 0;
+			}
+			
+			#the-date {
+				min-height: 80px;
+				padding: 20px 0;
+			}
+			
+			#the-info {
+				min-height: 100px;
+				margin: 50px 0;
+				padding: 20px 0;
+			}
+		-->
+		</style>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script type="text/javascript">
+		<!--
+			today = new Date();
+			currDay = today.getDate();
+			currMonth = today.getMonth() + 1;
+			currYear = today.getFullYear();
+			
+			// -- Helper functions -- //
+			// Compute for the days elapsed since January 1 (plus current day)
+			function daysFromStart(month, date, year) {
+				var dayCount;
+
+				dayCount = date;
+				
+				for(var i = 1; i < month; i++) {
+					// Some months have 31 days...
+					if(i == 1 || i == 3 || i == 5 || i == 7 || i == 8 || i == 10 || i == 12) {
+						dayCount += 31;
+					}
+					
+					// ... others have 30 ... 
+					else if(i == 4 || i == 6 || i == 9 || i == 11) {
+						dayCount += 30;
+					}
+					
+					// ... then there's February :p
+					else {
+						if(year % 400 == 0) {
+							dayCount += 29;
+						}
+						
+						else if(year % 100 == 0) {
+							dayCount += 28;
+						}
+						
+						else if(year % 4 ==0) {
+							dayCount += 29;
+						}
+						
+						else {
+							dayCount += 28;
+						}
+					}
+				}
+				
+				return dayCount;
+			}
+			
+			// Convert a decimal to a hex number, with padding
+			// Original code from: http://stackoverflow.com/a/1446578
+			function D2H(d, padding) {
+				var hex = Number(d).toString(16);
+				padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
+
+				while (hex.length < padding) {
+					hex = "0" + hex;
+				}
+
+				return hex;
+			}
+			
+			// Simple container for a color with RGB values
+			function RGBObj(r, g, b) {
+				this.red = r;
+				this.green = g;
+				this.blue = b;
+				
+				this.hex = "#" + D2H(parseInt(this.red), 2) + D2H(parseInt(this.green), 2) + D2H(parseInt(this.blue), 2);
+				this.lum = (0.2126 * this.red) + (0.7152 * this.green) + (0.0722 * this.blue);
+			}
+			
+			// The fun function!
+			// Month and day are assumed to be integers represeting a month and date value
+			// Returns a hex string representing a unique color for the specified date.
+			function dateToColor(month, date, year) {
+				var red, green, blue, hex, color, dayFromStart;
+				var _DELTA;
+	
+				// Number of possible colors divided among number of days in a year.
+				_DELTA = (256 * 256 * 256) / 366;
+				
+				dayFromStart = daysFromStart(10, 31, 2013);
+				console.log("days from start: " + dayFromStart);
+				
+				// Raw color value
+				color = dayFromStart * _DELTA;
+				console.log("raw: " + color);
+				
+				red = (color % 16777216) / 65536;
+				console.log("red: " + red);
+				
+				green = (color % 65536) / 256;
+				console.log("green: " + green);
+				
+				blue = color % 256;
+				console.log("blue: " + blue);
+				
+				//hex = "#" + D2H(parseInt(red), 2) + D2H(parseInt(green), 2) + D2H(parseInt(blue), 2);
+				//console.log("hex: " + hex);
+				
+				return new RGBObj(red, green, blue);
+			}
+			
+			// Update the DOM
+			$(document).ready(function() {
+				var value; 
+				value = dateToColor(currMonth, currDay, currYear);
+				
+				console.log(value.hex);
+				
+				$("#the-current-date").html(currMonth + " . " + currDay + " . " + currYear);
+				$("#the-color-code").html(value.hex);
+				$("body").css("background-color", value.hex);
+				
+				console.log("lum: " + value.lum);
+				
+				if(value.lum < 75) {
+					$("body").css("color", "#F0F0F0");
+				}
+				
+				else {
+					$("body").css("color", "#080808");
+				}
+			});
+		-->
+		</script>
+		<meta charset="UTF-8" />
+	</head>
+	<body>
+		<div class="wrapper">
+			<div id="the-color">
+				<h1 class="main-head">Color of the Day</h1>
+				<h2 id="the-color-code" class="main-content">#FFFFFF</h2>
+			</div>
+			<div id="the-date">
+				<h1>Date Today</h1>
+				<h2 id="the-current-date">MM . DD . YYYY</h2>
+			</div>
+			<div id="the-info">
+				<h1>About</h1>
+				<p><strong>Color of the Day</strong> is a simple JS project by <a href="http://instilledbee.net">InstilledBee</a>, that involves providing a unique hexadecimal color value for each of the 365 days in one year,
+				effectively providing a hash of sorts. The algorithm is written from scratch, and parts of the code rely on <a href="http://www.jquery.com" target="_blank">jQuery</a> for assistance.</p>
+			</div>
+		</div>
+	</body>
+</html>
