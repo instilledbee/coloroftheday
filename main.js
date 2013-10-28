@@ -30,9 +30,12 @@ function dateToColor(month, date, year) {
 	
 	// Raw color value
 	color = dayFromStart * _DELTA;
+	color += (year * year); // Ensure a unique color every year
 	console.log("raw: " + color);
-	
-	red = (color % 16777216) / 65536;
+
+	red = (color % 65536) / 512;
+	red = ((red * 32) - (red * 16)) % 256;
+	red = (red + 512) % 256;
 	console.log("red: " + red);
 	
 	green = (color % 65536) / 256;
@@ -69,24 +72,42 @@ function updateColors(month, date, year) {
 
 // Update the DOM
 $(document).ready(function() {
+	// Try to get date if specified
+	var param;
+	param = window.location.search.substring(1);
+	
+	if(param.length && isValidDate(param)) {
+		dateParam = param.split('/');
+		currMonth = dateParam[0];
+		currDay = dateParam[1];
+		currYear = dateParam[2];
+	}
+	
 	updateColors(currMonth, currDay, currYear);
 	
 	$('#open-calendar').click(function() {
 		$('#the-calendar').fadeToggle();
 		
 		$(this).fadeTo('fast', 0, function() {
-			datePickerEl = $('#date-selector').glDatePicker(
+			$('#date-selector').glDatePicker(
 			{
 				cssName: 'flatwhite',
 				calendarOffset: { y: 10 },
-				hideOnClick: true,
+				showAlways: true,
 				onClick: (function(el, cell, date, data) {
+					$.extend(datePickerEl.options, {
+						showAlways: false
+					});
+					datePickerEl.render();
+					datePickerEl.hide();
 					updateColors(date.getMonth() + 1, date.getDate(), date.getFullYear());
 					$('#the-calendar').fadeToggle();
 					$('#open-calendar').css('visibility', 'visible');
 					$('#open-calendar').fadeTo('fast', 1);
 				})
-			}).glDatePicker(true);
+			});
+			
+			datePickerEl = $('#date-selector').glDatePicker(true);
 			
 			datePickerEl.show();
 			$('#open-calendar').css('visibility', 'hidden');
