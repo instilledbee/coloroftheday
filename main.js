@@ -89,11 +89,21 @@ $(document).ready(function() {
 		$('#the-calendar').fadeToggle();
 		
 		$(this).fadeTo('fast', 0, function() {
+			var param, dateToUse;
+			param = window.location.search.substring(1);
+			if(param.length && isValidDate(param)) {
+				d = param.split('/');
+				dateToUse = new Date(d[2], d[0] - 1, d[1]);
+			} else {
+				dateToUse = new Date();
+			}
+			
 			$('#date-selector').glDatePicker(
 			{
 				cssName: 'flatwhite',
 				calendarOffset: { y: 10 },
 				showAlways: true,
+				selectedDate: dateToUse,
 				onClick: (function(el, cell, date, data) {
 					$.extend(datePickerEl.options, {
 						showAlways: false
