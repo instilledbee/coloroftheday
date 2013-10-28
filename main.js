@@ -25,6 +25,8 @@ function dateToColor(month, date, year) {
 	// Number of possible colors divided among number of days in a year.
 	_DELTA = (256 * 256 * 256) / 366;
 	
+	console.log(month + ", " + date + ", " + year);
+	
 	dayFromStart = daysFromStart(month, date, year);
 	console.log("days from start: " + dayFromStart);
 	

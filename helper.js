@@ -4,7 +4,7 @@
 function daysFromStart(month, date, year) {
 	var dayCount;
 
-	dayCount = date;
+	dayCount = parseInt(date);
 	
 	for(var i = 1; i < month; i++) {
 		// Some months have 31 days...
