@@ -120,6 +120,10 @@ $(document).ready(function() {
 			});
 			
 			datePickerEl = $('#date-selector').glDatePicker(true);
+			$.extend(datePickerEl.options, {
+				showAlways: true
+			});
+			datePickerEl.render();
 			
 			datePickerEl.show();
 			$('#open-calendar').css('visibility', 'hidden');
